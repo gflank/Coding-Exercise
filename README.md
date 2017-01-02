@@ -1,3 +1,2 @@
-# Leetcode
-
-Part of Leetcode exercise
+# Coding Exercise
+Using Java to solve some algorithm problems.
