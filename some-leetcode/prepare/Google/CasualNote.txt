@@ -1,0 +1,93 @@
+Please use this Google doc to code during your interview. To free your hands for coding, we recommend that you use a headset or a phone with speaker option.
+
+Given an unsorted collection of timestamped votes, write a function to report the top vote-getter as of a given time T. 
+
+Given an unsorted collection of timestamped votes, write a function to report the top K vote-getters as of a given time T. 
+
+Given an unsorted collection of timestamped votes and a list of the top N vote-getters sorted by number of votes, write a function to report a valid time T at which those vote-getters were the top N vote-getters in that order. 
+
+["sally", "zihong"]
+
+1000, sally
+900, zihong
+901, zihong
+1001, sally
+1002, sally
+950, dillon
+
+public class Solution {
+	public class Count {
+		int count;
+		String name;
+		public Count(int count, String name) {
+			this.count = count;
+			this.name = name;
+		}
+	}
+
+	public class Vote {
+		int time;
+		String name;
+		public Vote(int time, String name) {
+			this.time = time;
+			this.name = name;
+		}
+	}
+
+	public String maxVote(Vote[] votes, int T) {
+		HashMap<String, Integer> map = new HashMap<>();
+		String maxVote = "";
+		int max = 0;
+		for (Vote v : votes) {
+			int curTime = v.time;
+			if (curTime <= T) {
+				String curVote = v.name;
+				int curCount;
+				if (map.containsKey(curVote)) {
+					curCount = map.get(curVote) + 1; // miss a line to update the map
+				}
+				else {
+					map.put(curVote, 1);
+					curCount = 1;
+				}
+				if (curCount > max) {
+					maxVote = curVote;
+					max = curCount;
+				}
+			}
+		}
+		return maxVote;
+	}
+
+	public List<String> topKVote(Vote[] votes, int T, int k) {
+		HashMap<String, Integer> map = new HashMap<>();
+		for (Vote v : votes) {
+			int curTime = v.time;
+			if (curTime <= T) {
+				String curVote = v.name;
+				int curCount;
+				if (map.containsKey(curVote)) {
+					curCount = map.get(curVote) + 1; // miss a line to update the map
+				}
+				else {
+					map.put(curVote, 1);
+					curCount = 1;
+				}
+			}
+		}
+		// now use the heap to get top k
+		PriorityQueue<Count> minHeap = new PriorityQueue<Count>((a, b) -> (a.count - b.count));
+		for (String curName : map.keySet()) {
+			minHeap.offer(new Count(map.get(curName), curName));
+			if (minHeap.size() > k) {
+				minHeap.poll();
+			}
+		}
+		List<String> res = new ArrayList<>();
+		while(!minHeap.isEmpty()) {
+			res.add(minHeap.poll().name);
+		}
+		Collections.reverse(res);
+		return res;
+	}
+}

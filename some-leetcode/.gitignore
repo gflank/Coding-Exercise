@@ -1,0 +1,15 @@
+// compiled files
+*.class
+
+// sublime project files
+*.sublime-project
+*.sublime-workspace
+
+// testing folder
+test
+
+// vim backup files
+*.*~
+
+*.png
+*.html
